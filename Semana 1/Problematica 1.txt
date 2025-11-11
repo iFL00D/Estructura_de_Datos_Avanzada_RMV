@@ -1,0 +1,28 @@
+Problematica 1      Estrucura de datos avanzada         Sesión 21/Ago/2025
+---------------------------------------------------------------
+
+Una empresa de mensajeria necesita entregar 1000 paquetes en la ciudad de tepic 
+
+¿Como organizarian la información para organizar la ruta mas eficiente?
+
+Tener la información de mi local donde tengo los paquetes, necesito saber la ubicación en donde se encuentra en tepic
+Tener los datos de los paquetes, a donde tiene que llegar, el tamaño del paquete, y el peso del paquete.
+Saber cuantos vehiculos tengo y cuanto es la capacidad maxima para portar paquetes.
+
+Teniendo en cuenta a tepic, lo dividiria en sectores cada camion tiene un sector para poder entregar paquetes
+
+si en un sector no hay suficientes pedidos, automaticamente cuando finalize la entrega de paquetes pasara a ayudar a un sector que tenga mayor cantidad de pedidos
+
+-------------------------------------------------------------------
+    Red logistica inteligente
+-------------------------------------------------------------------
+
+¿Como explicarian a un niño de 10 años qué significa 'definir algo en términos de sí mismo'?
+
+-------------------------------------------------------------------
+
+Actividad
+
+Equipos max de 3 personas
+
+Identificar palindromos con funcion en cualquier lenguaje de programación
