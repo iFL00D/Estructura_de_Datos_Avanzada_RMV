@@ -1,0 +1,20 @@
+1. El error de "Fuera por Uno" (off-by-one error)
+    - El error: de declarar el tamaño del arreglo(array) incorrectamente.
+    - Consecuencia: cuando intentas acceder a dp[n], el programa explota (IndexError) porque el ultimo indice valido es n-1
+
+    ¿Como evitarlo?
+        - Regla de oro: Si tu objetivo es calcular un valor para n, tu tabla siempre debe tener tamaño n+1.
+        - "Para el problema N, neceisto N + 1 huecos".
+
+2. El Bucle incompleto (range error)
+    - Usar un rango que se detiene antes de tiempo.
+    - Consecuencia: El bucle nunca calcula el valor final que necesitas.
+
+3. Olvidar los casos Borde (Edge cases)
+    - El error: Asumir que n siempre será grande.
+    - Consecuencia: Si alguien pide fibonacci(0), el codigo intenta asignar dp[i] = 1 y falla porque la tabla es muy pequeña o no existe.
+
+    ¿Como evitarlo?
+        - Usar Clausualas de guardia al inicio de la función. Antes de crear tablas o bucles, menajar los casos triviales como:
+        if n == 0: return 0
+        if n < 0: return None

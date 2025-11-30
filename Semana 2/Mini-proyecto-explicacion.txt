@@ -1,0 +1,12 @@
+¿Que enfoque prefiero y porque?
+    - Para este problema en especifico, prefiero el enfoque de tabulación (Bottom-Up).
+
+¿Porque?
+    - Ofrece claridad linea, al ser un problema secuencial donde simepre neceistamos calcular los valores anteriores para
+    obtener el siguiente, la iteración con un bucle "for" se siente mas natura y facil de leer que los saltos recursivos.
+    No hay riesgo de llegar al limite de recursión (stack overflow) si el array fuera gigante (ej. 10,000 elementos).
+
+    - Hay mas optimización de espacio, aunque en el codigo se usó una lista "dp" completa, con la tabulación es muy facil darse
+    cuenta de que solo neceistamos los ultimos dos valores (i-1 y i-2) en cada paso. Esto permite la optimización de codigo para
+    usar solo dos variables en lugar de todo un array, reduciendo uso de momoria O(1), algo que es mucho mas dificil de ver o
+    implementar con el enfoque de memorización.
