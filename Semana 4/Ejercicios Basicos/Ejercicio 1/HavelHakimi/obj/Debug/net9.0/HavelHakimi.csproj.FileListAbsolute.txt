@@ -1,0 +1,14 @@
+C:\Users\israe\Documents\RICARDO\UAN\Semestre 5\Estructura de datos Avanzada\Actividades\Semana 4\Ejercicios Basicos\Ejercicio 1\HavelHakimi\bin\Debug\net9.0\HavelHakimi.exe
+C:\Users\israe\Documents\RICARDO\UAN\Semestre 5\Estructura de datos Avanzada\Actividades\Semana 4\Ejercicios Basicos\Ejercicio 1\HavelHakimi\bin\Debug\net9.0\HavelHakimi.deps.json
+C:\Users\israe\Documents\RICARDO\UAN\Semestre 5\Estructura de datos Avanzada\Actividades\Semana 4\Ejercicios Basicos\Ejercicio 1\HavelHakimi\bin\Debug\net9.0\HavelHakimi.runtimeconfig.json
+C:\Users\israe\Documents\RICARDO\UAN\Semestre 5\Estructura de datos Avanzada\Actividades\Semana 4\Ejercicios Basicos\Ejercicio 1\HavelHakimi\bin\Debug\net9.0\HavelHakimi.dll
+C:\Users\israe\Documents\RICARDO\UAN\Semestre 5\Estructura de datos Avanzada\Actividades\Semana 4\Ejercicios Basicos\Ejercicio 1\HavelHakimi\bin\Debug\net9.0\HavelHakimi.pdb
+C:\Users\israe\Documents\RICARDO\UAN\Semestre 5\Estructura de datos Avanzada\Actividades\Semana 4\Ejercicios Basicos\Ejercicio 1\HavelHakimi\obj\Debug\net9.0\HavelHakimi.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\israe\Documents\RICARDO\UAN\Semestre 5\Estructura de datos Avanzada\Actividades\Semana 4\Ejercicios Basicos\Ejercicio 1\HavelHakimi\obj\Debug\net9.0\HavelHakimi.AssemblyInfoInputs.cache
+C:\Users\israe\Documents\RICARDO\UAN\Semestre 5\Estructura de datos Avanzada\Actividades\Semana 4\Ejercicios Basicos\Ejercicio 1\HavelHakimi\obj\Debug\net9.0\HavelHakimi.AssemblyInfo.cs
+C:\Users\israe\Documents\RICARDO\UAN\Semestre 5\Estructura de datos Avanzada\Actividades\Semana 4\Ejercicios Basicos\Ejercicio 1\HavelHakimi\obj\Debug\net9.0\HavelHakimi.csproj.CoreCompileInputs.cache
+C:\Users\israe\Documents\RICARDO\UAN\Semestre 5\Estructura de datos Avanzada\Actividades\Semana 4\Ejercicios Basicos\Ejercicio 1\HavelHakimi\obj\Debug\net9.0\HavelHakimi.dll
+C:\Users\israe\Documents\RICARDO\UAN\Semestre 5\Estructura de datos Avanzada\Actividades\Semana 4\Ejercicios Basicos\Ejercicio 1\HavelHakimi\obj\Debug\net9.0\refint\HavelHakimi.dll
+C:\Users\israe\Documents\RICARDO\UAN\Semestre 5\Estructura de datos Avanzada\Actividades\Semana 4\Ejercicios Basicos\Ejercicio 1\HavelHakimi\obj\Debug\net9.0\HavelHakimi.pdb
+C:\Users\israe\Documents\RICARDO\UAN\Semestre 5\Estructura de datos Avanzada\Actividades\Semana 4\Ejercicios Basicos\Ejercicio 1\HavelHakimi\obj\Debug\net9.0\HavelHakimi.genruntimeconfig.cache
+C:\Users\israe\Documents\RICARDO\UAN\Semestre 5\Estructura de datos Avanzada\Actividades\Semana 4\Ejercicios Basicos\Ejercicio 1\HavelHakimi\obj\Debug\net9.0\ref\HavelHakimi.dll

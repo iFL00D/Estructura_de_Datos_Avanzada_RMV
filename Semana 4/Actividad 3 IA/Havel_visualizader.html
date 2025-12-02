@@ -1,0 +1,427 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Havel–Hakimi Visualizado — Paso a paso</title>
+<link rel="stylesheet" href="styles.css"> <!-- añadi la etiqueta link por gusto en separa los estilos de la hoja principal -->
+</head>
+<body>
+  <div class="app" role="application" aria-label="Visualizador Havel-Hakimi">
+    <header>
+       <p id="NombreMatricula">Ricardo Matos Vizcarra 23206636</p> <!-- añadi mi nombre y mi matricula al header -->
+      <div>
+        <h1>Havel–Hakimi — Visualizador paso a paso</h1>
+        <p>Introduce una secuencia de grados (ej. <code>4,3,3,2,2,1</code>) y valida.</p>
+      </div>
+      <div class="controls" aria-hidden="false">
+        <input id="seqInput" type="text" placeholder="4,3,3,2,2,1" aria-label="Secuencia de grados" />
+        <button id="validateBtn">Validar</button>
+        <button id="nextBtn" class="secondary" disabled>Paso Siguiente</button>
+        <button id="resetBtn" class="ghost" disabled>Reiniciar</button>
+      </div>
+    </header>
+
+    <section class="visual" aria-live="polite">
+      <div id="sequenceContainer" class="sequence-row" aria-label="Secuencia visual"></div>
+
+      <div class="info">
+        <div id="statusArea" style="min-height:36px"></div>
+        <div style="text-align:right">
+          <div id="stepCounter" style="color:#5b6b76;font-weight:600">Paso: 0</div>
+        </div>
+      </div>
+
+      <div id="log" class="log" aria-hidden="false"></div>
+    </section>
+  </div>
+
+<script>
+/*
+  Havel–Hakimi visualizador (vanilla JS)
+  - Comentarios en español
+  - Paso a paso, animaciones FLIP para reordenado
+*/
+
+(() => {
+  // --- Utilidades DOM ---
+  const $ = id => document.getElementById(id);
+  const seqInput = $('seqInput');
+  const validateBtn = $('validateBtn');
+  const nextBtn = $('nextBtn');
+  const resetBtn = $('resetBtn');
+  const container = $('sequenceContainer');
+  const statusArea = $('statusArea');
+  const logEl = $('log');
+  const stepCounter = $('stepCounter');
+
+  // Estado del algoritmo
+  let originalSeq = [];
+  let seq = [];            // array de enteros actualmente
+  let step = 0;
+  let running = false;
+  let finished = false;
+
+  // Animación timing (coordinación)
+  const TIMES = {
+    highlightD1: 600,
+    highlightDec: 600,
+    decrement: 420,
+    reorder: 420
+  };
+
+  // --- Parseo y validación del input ---
+  function parseInput(text){
+    // elimina todo lo que no sea dígito, coma, espacio, guión (por si hay negativos)
+    if (!text || !text.trim()) return null;
+    const parts = text.split(',').map(s => s.trim()).filter(s => s !== '');
+    const nums = [];
+    for (const p of parts){
+      if (!/^-?\d+$/.test(p)) return null; // solo enteros
+      nums.push(parseInt(p,10));
+    }
+    // todos >= 0
+    if (nums.some(n => n < 0)) return null;
+    return nums;
+  }
+
+  // --- Renderizado de la secuencia ---
+  // Crea elementos DOM para cada número; usamos data-index para identificar
+  function renderSequence(arr){
+    // FLIP: tomar bounding boxes antes de cambio
+    const prevRects = new Map();
+    container.querySelectorAll('.box').forEach(el => {
+      const id = el.dataset.uid;
+      prevRects.set(id, el.getBoundingClientRect());
+    });
+
+    // Limpiar y crear nuevo DOM
+    container.innerHTML = '';
+    arr.forEach((n, idx) => {
+      const wrapper = document.createElement('div');
+      // UID para FLIP
+      wrapper.dataset.uid = `${n}-${idx}-${Math.random().toString(36).slice(2,8)}`;
+      wrapper.className = 'box';
+      // Index label (posición actual en lista)
+      const idxLabel = document.createElement('div');
+      idxLabel.className = 'index';
+      idxLabel.textContent = idx + 1;
+      wrapper.appendChild(idxLabel);
+      // Number
+      const num = document.createElement('div');
+      num.className = 'num';
+      num.textContent = n;
+      wrapper.appendChild(num);
+      container.appendChild(wrapper);
+    });
+
+    // After inserting, run FLIP animation to animate reordering
+    requestAnimationFrame(() => {
+      // For each new element, compute delta from prevRects (match by uid not possible deterministic),
+      // Instead match by value and approximate: find a previous element with same number that hasn't been paired yet.
+      // We'll do a simple heuristic: match by number and nearest vertical position.
+      const newEls = Array.from(container.children);
+      const usedPrev = new Set();
+
+      newEls.forEach(newEl => {
+        // find any prev rect with same number text
+        const newNum = newEl.querySelector('.num').textContent;
+        let matchEntry = null;
+        for (const [id, rect] of prevRects.entries()){
+          if (usedPrev.has(id)) continue;
+          // id format includes number as prefix so test
+          if (id.startsWith(newNum + '-')) {
+            matchEntry = [id, rect];
+            break;
+          }
+        }
+        // If found: compute transform invert and animate
+        if (matchEntry){
+          const [id, prevRect] = matchEntry;
+          usedPrev.add(id);
+          const newRect = newEl.getBoundingClientRect();
+          const dx = prevRect.left - newRect.left;
+          const dy = prevRect.top - newRect.top;
+          // invert
+          newEl.style.transform = `translate(${dx}px, ${dy}px)`;
+          // then animate to identity
+          requestAnimationFrame(() => {
+            newEl.style.transition = `transform ${TIMES.reorder}ms ease`;
+            newEl.style.transform = '';
+            // cleanup after animation
+            setTimeout(() => {
+              newEl.style.transition = '';
+              newEl.style.transform = '';
+            }, TIMES.reorder + 30);
+          });
+        } else {
+          // New element (no previous match) - optionally animate fade-in
+          newEl.style.opacity = 0;
+          requestAnimationFrame(() => {
+            newEl.style.transition = `opacity ${TIMES.reorder}ms ease, transform ${TIMES.reorder}ms ease`;
+            newEl.style.opacity = 1;
+            newEl.style.transform = 'translateY(-6px)';
+            requestAnimationFrame(() => {
+              newEl.style.transform = '';
+            });
+            setTimeout(()=>{
+              newEl.style.transition = '';
+            }, TIMES.reorder + 30);
+          });
+        }
+      });
+    });
+  }
+
+  // Helpers para UI messaging
+  function setStatus(html, type){
+    statusArea.innerHTML = '';
+    if (!html) return;
+    const el = document.createElement('div');
+    el.className = 'message ' + (type === 'ok' ? 'ok' : (type === 'bad' ? 'bad' : ''));
+    el.innerHTML = html;
+    statusArea.appendChild(el);
+  }
+  function log(msg){
+    const time = new Date().toLocaleTimeString();
+    logEl.innerHTML = `<div>[${time}] ${msg}</div>` + logEl.innerHTML;
+  }
+  function updateStepCounter(){
+    stepCounter.textContent = `Paso: ${step}`;
+  }
+
+  // --- Havel-Hakimi step implementation ---
+  // Returns an object with info and whether finished
+  function havelHakimiStep(currentSeq){
+    // Work on a copy
+    const arr = currentSeq.slice();
+    // Remove zeros at end (they don't matter)
+    while (arr.length && arr[arr.length - 1] === 0) arr.pop();
+    if (arr.length === 0) {
+      return { finished: true, graphical: true, reason: 'Todos ceros' };
+    }
+    // Sort non-increasing
+    arr.sort((a,b)=>b-a);
+    const d = arr.shift(); // d1 (first element)
+    // Validation
+    if (d < 0) return { finished:true, graphical:false, reason:'Número negativo' };
+    if (d > arr.length) {
+      return { finished: true, graphical: false, reason: `d1=${d} > elementos restantes (${arr.length})` };
+    }
+    // subtract 1 from next d elements
+    for (let i=0;i<d;i++){
+      arr[i] = arr[i] - 1;
+      if (arr[i] < 0) {
+        return { finished: true, graphical: false, reason: `Elemento se hizo negativo al decrementar (índice ${i})`, interim: {d, arr: [ ...arr ], removed: d} };
+      }
+    }
+    // After operation, remove zeros later (but algorithm does at next loop)
+    // Return new array to continue
+    return { finished: false, d, arr: arr.slice() };
+  }
+
+  // Animate a single iteration (visual + state update)
+  async function animateIteration(){
+    if (finished || !running) return;
+    step++;
+    updateStepCounter();
+
+    // Pre-step: sort seq non-increasing for consistent display
+    seq.sort((a,b)=>b-a);
+    renderSequence(seq);
+    log(`Estado antes del paso ${step}: [${seq.join(', ')}]`);
+
+    // Highlight d1 (first element)
+    const boxes = Array.from(container.children);
+    if (boxes.length === 0){
+      // nothing to do
+      finished = true;
+      setStatus('✓ Es Gráfica', 'ok');
+      log('Secuencia vacía -> gráfica');
+      nextBtn.disabled = true;
+      resetBtn.disabled = false;
+      return;
+    }
+    const firstBox = boxes[0];
+    firstBox.classList.add('d1');
+    // animate d1 highlight
+    await wait(TIMES.highlightD1);
+
+    // Run logic check
+    // We'll perform the step calculation and then animate subsequent effects
+    // Use snapshot of seq before step
+    const before = seq.slice();
+    // sort non-increasing
+    before.sort((a,b)=>b-a);
+    const result = havelHakimiStep(before);
+
+    if (result.finished){
+      // final
+      firstBox.classList.remove('d1');
+      // if finished and graphical true -> success
+      if (result.graphical){
+        // show ok message
+        setStatus('✓ Es Gráfica', 'ok');
+        log(`Final (gráfica). Razón: ${result.reason}`);
+      } else {
+        setStatus('✖ No Gráfica', 'bad');
+        log(`Final (no gráfica). Razón: ${result.reason}`);
+      }
+      finished = true;
+      nextBtn.disabled = true;
+      resetBtn.disabled = false;
+      return;
+    }
+
+    // If not finished: we have d and arr (arr is after removing d and decrementing)
+    const d = result.d;
+    const afterArr = result.arr.slice();
+
+    // Visual: highlight next d boxes as to-decrement
+    const currentBoxes = Array.from(container.children);
+    // ensure enough boxes
+    // Note: after removing first, the next d boxes are indices 1..d in original list
+    const decrementIndices = [];
+    for (let i=1;i<=d;i++){
+      if (i < currentBoxes.length) decrementIndices.push(i);
+    }
+    decrementIndices.forEach(i => currentBoxes[i].classList.add('to-decrement'));
+
+    // Wait a bit so user sees highlight
+    await wait(TIMES.highlightDec);
+
+    // Animate decrement: update numbers visually (we'll mutate seq)
+    // Remove d1 visually: make it blue then removed
+    firstBox.classList.add('removed'); // will fade/scale
+    // Prepare new sequence: remove first element from seq
+    seq = seq.slice(); // copy
+    // Remove one instance corresponding to the first (we match value and remove first)
+    // But to be safe, remove the first element of the sorted display order:
+    seq.sort((a,b)=>b-a);
+    seq.shift();
+
+    // Decrement next d elements of seq (in current sorted order)
+    for (let i=0;i<d;i++){
+      if (i >= seq.length) break;
+      seq[i] = seq[i] - 1;
+    }
+
+    // Visual: update displayed numbers with small animation
+    // We'll rerender but animate number elements temporarily to emphasize change
+    // First, snapshot existing DOM text elements for a small scale pop
+    // Before re-render, animate numeric change (scale down/up)
+    const toUpdateBoxes = decrementIndices.map(i => currentBoxes[i]).filter(Boolean);
+    toUpdateBoxes.forEach(box => {
+      const numEl = box.querySelector('.num');
+      // quick pop animation
+      numEl.style.transform = 'scale(0.85)';
+      numEl.style.opacity = '0.9';
+      numEl.textContent = Math.max(0, parseInt(numEl.textContent,10)-1);
+    });
+
+    // Wait for decrement animation duration
+    await wait(TIMES.decrement);
+
+    // Clean highlight classes
+    currentBoxes.forEach(b => {
+      b.classList.remove('to-decrement');
+      if (!b.classList.contains('removed')) b.classList.remove('d1');
+    });
+
+    // Rerender with FLIP reorder animation (seq already updated)
+    // Remove zeros from tail for visual clarity
+    while (seq.length && seq[seq.length-1] === 0) seq.pop();
+    // Sort non-increasing
+    seq.sort((a,b)=>b-a);
+
+    // Render and animate reorder
+    renderSequence(seq);
+
+    // Allow time for reorder animation to finish
+    await wait(TIMES.reorder + 20);
+
+    // Continue: check immediate termination (all zeros)
+    if (seq.length === 0){
+      finished = true;
+      setStatus('✓ Es Gráfica', 'ok');
+      log('Secuencia reducida a todos ceros -> gráfica');
+      nextBtn.disabled = true;
+      resetBtn.disabled = false;
+      return;
+    }
+
+    // Re-enable next step if not finished
+    nextBtn.disabled = false;
+    resetBtn.disabled = false;
+    log(`Resultado paso ${step}: [${seq.join(', ')}]`);
+  }
+
+  // Simple sleep util returning Promise
+  function wait(ms){ return new Promise(res => setTimeout(res, ms)); }
+
+  // --- UI Event handlers ---
+  validateBtn.addEventListener('click', ()=> {
+    // Parse input
+    const parsed = parseInput(seqInput.value);
+    if (!parsed) {
+      setStatus('Entrada inválida: usa una lista de enteros separados por comas (ej. 4,3,3,2,2,1).', 'bad');
+      log('Entrada inválida por parseo.');
+      return;
+    }
+    // Prepare sequence: remove zeros, sort non-increasing
+    originalSeq = parsed.slice();
+    seq = parsed.slice().filter(n => n !== 0).sort((a,b)=>b-a);
+    step = 0;
+    finished = false;
+    running = true;
+    updateStepCounter();
+    renderSequence(seq);
+    setStatus('Secuencia cargada. Presiona "Paso Siguiente" para avanzar.', 'ok');
+    log(`Secuencia inicial: [${originalSeq.join(', ')}] -> procesable: [${seq.join(', ')}]`);
+    nextBtn.disabled = false;
+    resetBtn.disabled = false;
+    // disable validate to avoid weird mid-run re-validate (but allow re-enable on reset)
+    validateBtn.disabled = true;
+    seqInput.disabled = true;
+  });
+
+  nextBtn.addEventListener('click', async ()=> {
+    if (finished) return;
+    nextBtn.disabled = true; // evita clicks rápidos
+    await animateIteration();
+  });
+
+  resetBtn.addEventListener('click', ()=> {
+    // reset full UI
+    seqInput.disabled = false;
+    validateBtn.disabled = false;
+    resetBtn.disabled = true;
+    nextBtn.disabled = true;
+    seq = [];
+    originalSeq = [];
+    step = 0;
+    running = false;
+    finished = false;
+    container.innerHTML = '';
+    setStatus('', '');
+    log('Reiniciado por usuario.');
+    updateStepCounter();
+  });
+
+  // Keyboard: Enter to validate, Space for next step when enabled
+  seqInput.addEventListener('keydown', (e) => {
+    if (e.key === 'Enter') validateBtn.click();
+  });
+  document.addEventListener('keydown', (e) => {
+    if (e.key === ' ' && !nextBtn.disabled) {
+      e.preventDefault();
+      nextBtn.click();
+    }
+  });
+
+  // Initial small hint
+  setStatus('Introduce la secuencia y pulsa Validar. Consejo: usa comas entre números.', '');
+})();
+</script>
+</body>
+</html>

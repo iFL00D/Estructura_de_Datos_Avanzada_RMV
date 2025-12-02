@@ -1,0 +1,88 @@
+1,Santa Fe,Cuajimalpa,5
+1,Santa Fe,San Angel,8
+2,Cuajimalpa,Santa Fe,5
+2,Cuajimalpa,Miguel Hidalgo,7
+3,Xochimilco,Tlalpan,6
+3,Xochimilco,Coyoacan,8
+4,Tlalpan,Xochimilco,6
+4,Tlalpan,Coyoacan,5
+4,Tlalpan,San Angel,7
+5,San Angel,Santa Fe,8
+5,San Angel,Tlalpan,7
+5,San Angel,Mixcoac,3
+5,San Angel,Del Valle,5
+6,Coyoacan,Xochimilco,8
+6,Coyoacan,Tlalpan,5
+6,Coyoacan,Mixcoac,4
+6,Coyoacan,Del Valle,4
+7,Mixcoac,San Angel,3
+7,Mixcoac,Coyoacan,4
+7,Mixcoac,Del Valle,2
+7,Mixcoac,Napoles,3
+8,Del Valle,San Angel,5
+8,Del Valle,Coyoacan,4
+8,Del Valle,Mixcoac,2
+8,Del Valle,Narvarte,3
+9,Narvarte,Del Valle,3
+9,Narvarte,Napoles,2
+9,Narvarte,Roma Sur,4
+10,Napoles,Mixcoac,3
+10,Napoles,Narvarte,2
+10,Napoles,Condesa,4
+10,Napoles,Roma Norte,5
+11,Roma Sur,Narvarte,4
+11,Roma Sur,Roma Norte,2
+11,Roma Sur,Condesa,2
+11,Roma Sur,Doctores,3
+12,Condesa,Napoles,4
+12,Condesa,Roma Sur,2
+12,Condesa,Roma Norte,1
+12,Condesa,Polanco,4
+12,Condesa,Chapultepec,2
+13,Roma Norte,Napoles,5
+13,Roma Norte,Roma Sur,2
+13,Roma Norte,Condesa,1
+13,Roma Norte,Juarez,2
+13,Roma Norte,Doctores,2
+14,Juarez,Roma Norte,2
+14,Juarez,Polanco,3
+14,Juarez,Centro Historico,3
+14,Juarez,Tabacalera,2
+15,Centro Historico,Juarez,3
+15,Centro Historico,Doctores,2
+15,Centro Historico,Morelos,2
+15,Centro Historico,Guerrero,3
+15,Centro Historico,Tabacalera,2
+16,Polanco,Condesa,4
+16,Polanco,Juarez,3
+16,Polanco,Chapultepec,2
+16,Polanco,Anzures,2
+17,Anzures,Polanco,2
+17,Anzures,Chapultepec,3
+17,Anzures,San Rafael,3
+18,San Rafael,Anzures,3
+18,San Rafael,Tabacalera,2
+18,San Rafael,Sta Ma Ribera,2
+19,Tabacalera,Juarez,2
+19,Tabacalera,Centro Historico,2
+19,Tabacalera,San Rafael,2
+19,Tabacalera,Guerrero,2
+20,Doctores,Roma Sur,3
+20,Doctores,Roma Norte,2
+20,Doctores,Centro Historico,2
+20,Doctores,Morelos,3
+21,Chapultepec,Condesa,2
+21,Chapultepec,Polanco,2
+21,Chapultepec,Anzures,3
+22,Sta Ma Ribera,San Rafael,2
+22,Sta Ma Ribera,Guerrero,2
+22,Sta Ma Ribera,Tlatelolco,3
+23,Guerrero,Centro Historico,3
+23,Guerrero,Tabacalera,2
+23,Guerrero,Sta Ma Ribera,2
+23,Guerrero,Tlatelolco,2
+24,Morelos,Centro Historico,2
+24,Morelos,Doctores,3
+24,Morelos,Venustiano Carranza,4
+25,Tlatelolco,Sta Ma Ribera,3
+25,Tlatelolco,Guerrero,2

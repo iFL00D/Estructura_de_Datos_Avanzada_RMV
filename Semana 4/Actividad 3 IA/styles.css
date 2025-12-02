@@ -1,0 +1,191 @@
+/* Fuente y reset ligero */
+  :root{
+    --bg: #f5f6fa;
+    --card: #ffffff;
+    --text: #222;
+    --blue: #3498db;    /* d1 color */
+    --yellow: yellow;  /* decrement color */ /*Cambie el color a yellow porque era un naranja en vez de amarillo*/
+    --box-border: #000000;
+    --ok: #2ecc71;
+    --bad: #e74c3c;
+    --transition: 0.4s;
+    --box-size: 64px;
+  }
+  *{box-sizing:border-box}
+  html,body{height:100%}
+  body{
+    margin:0;
+    font-family: "Segoe UI", system-ui, -apple-system, "Helvetica Neue", Arial;
+    background:linear-gradient(180deg,#1d1d1d, #8f8e8e); /* yo cambie el color del fondo para mi gusto sin usar las variables puestas*/
+    color:var(--text);
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    padding:24px;
+    min-height:100vh;
+  }
+
+  .app {
+    width:100%;
+    max-width:980px;
+    background:var(--card);
+    border-radius:12px;
+    box-shadow:0 10px 30px rgba(20,30,60,0.08);
+    padding:20px;
+    background-color: whitesmoke; /* cambie el fondo de .app por un blanco generico*/
+  }
+
+  header{
+    display:flex;
+    gap:12px;
+    align-items:center;
+    justify-content:space-between;
+    margin-bottom:16px;
+  }
+  header h1{font-size:1.2rem;margin:0}
+  header p{margin:0;color:#586674;font-size:0.95rem}
+  #NombreMatricula{margin:0;color:#586674;font-size:0.95rem; max-width: 130px;}
+
+  /* Controls */
+  .controls{
+    display:flex;
+    gap:8px;
+    flex-wrap:wrap;
+    align-items:center;
+  }
+  input[type="text"]{
+    padding:10px 12px;
+    font-size:1rem;
+    border-radius:8px;
+    border:1px solid var(--box-border);
+    min-width:200px; /* Lo modifique a un valor mas chico para que los botones esten en la misma linea y no me quedara el boton de reiniciar abajo*/
+  }
+  button{
+    padding:10px 14px;
+    border-radius:8px;
+    border:1px solid; /*Quite el valor trnasparent porque no me gustaba como se veia visualmente*/
+    background:#2f80ed;
+    color:white;
+    font-weight:600;
+    cursor:pointer;
+    transition:transform 0.12s ease, opacity 0.12s;
+  }
+  button:active{transform:translateY(1px)}
+  button[disabled]{opacity:0.5;cursor:not-allowed}
+
+  button.secondary{
+    background:#ffffff;
+    color:var(--text);
+    border:1px solid var(--box-border);
+  }
+  button.ghost{
+    background:#ffffff;color:#34495e;border:1px solid var(--box-border);
+  }
+
+  /* Visual area */
+  .visual {
+    margin-top:18px;
+    padding:14px;
+    border-radius:10px;
+    background:linear-gradient(180deg, rgba(255,255,255,0.7), rgba(245,247,250,0.8));
+    border:1px solid var(--box-border);
+  }
+
+  .sequence-row{
+    display:flex;
+    gap:12px;
+    align-items:flex-end;
+    min-height:120px;
+    padding:16px;
+    flex-wrap:wrap;
+    position:relative;
+  }
+
+  /* Each box */
+  .box {
+    width:var(--box-size);
+    height:var(--box-size);
+    border-radius:8px;
+    background:white;
+    border:1px solid var(--box-border);
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    box-shadow:0 6px 14px rgba(16,24,48,0.04);
+    font-weight:700;
+    font-size:1.05rem;
+    position:relative;
+    transition: transform var(--transition) ease, background-color var(--transition) ease, opacity 0.25s ease;
+    /* will-change helps with FLIP animations */
+    will-change: transform, background-color, opacity;
+  }
+
+  .box .num {
+    transition: transform 0.18s ease, color 0.18s ease;
+    display:inline-block;
+    min-width:18px;
+    text-align:center;
+  }
+
+  .box.index {
+    position: absolute;
+    top: -18px;
+    font-size:0.7rem;
+    color:#6b7785;
+    font-weight:600;
+    left:50%;
+    transform:translateX(-50%);
+  }
+
+  /* Highlighting states */
+  .box.d1 {
+    background: var(--blue);
+    color: white;
+    border-color: rgba(0,0,0,0.06);
+    z-index:5;
+  }
+  .box.to-decrement {
+    background: var(--yellow);
+    color: white;
+    border-color: rgba(0,0,0,0.06);
+  }
+  .box.removed {
+    opacity:0;
+    transform:scale(0.6) translateY(-8px);
+    pointer-events:none;
+  }
+
+  /* Footer / messages */
+  .info {
+    margin-top:12px;
+    display:flex;
+    gap:12px;
+    align-items:center;
+    justify-content:space-between;
+    flex-wrap:wrap;
+  }
+  .message {
+    font-weight:700;
+    padding:8px 12px;
+    border-radius:8px;
+    display:inline-flex;
+    align-items:center;
+    gap:8px;
+  }
+  .message.ok { background: rgba(46,204,113,0.08); color:var(--ok); border:1px solid rgba(46,204,113,0.12) }
+  .message.bad { background: rgba(231,76,60,0.08); color:var(--bad); border:1px solid rgba(231,76,60,0.12) }
+
+  .log {
+    margin-top:10px;
+    font-family:monospace;
+    font-size:0.95rem;
+    color:#4b5563;
+  }
+
+  /* Responsive adjustments */
+  @media (max-width:768px){
+    .controls{flex-direction:column; align-items:stretch}
+    header{flex-direction:column; align-items:flex-start; gap:8px}
+    .sequence-row{min-height:160px}
+    :root{--box-size:56px}
+  }
