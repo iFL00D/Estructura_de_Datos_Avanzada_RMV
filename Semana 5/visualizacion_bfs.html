@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Visualización de Ejecución BFS</title>
+    <script src="https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js"></script>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f4f4f9;
+            padding: 20px;
+            color: #333;
+        }
+        h1, h2 {
+            color: #2c3e50;
+            text-align: center;
+        }
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            background: white;
+            padding: 20px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            border-radius: 8px;
+        }
+        
+        /* Estilos para el diagrama Mermaid */
+        .mermaid {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 30px;
+        }
+
+        /* Estilos de la Tabla */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+            font-size: 0.9em;
+        }
+        th, td {
+            padding: 12px 15px;
+            border-bottom: 1px solid #ddd;
+            text-align: left;
+        }
+        th {
+            background-color: #009879;
+            color: #ffffff;
+            font-weight: bold;
+        }
+        tr:nth-of-type(even) {
+            background-color: #f3f3f3;
+        }
+        tr:hover {
+            background-color: #f1f1f1;
+            font-weight: bold;
+            color: #009879;
+        }
+        
+        /* Leyenda de colores */
+        .legend {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-bottom: 20px;
+            font-size: 0.85em;
+        }
+        .dot {
+            height: 12px;
+            width: 12px;
+            display: inline-block;
+            border-radius: 50%;
+            margin-right: 5px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>Reporte de Ejecución BFS</h1>
+    
+    <h2>1. Visualización del Grafo (Niveles)</h2>
+    <div class="legend">
+        <span><span class="dot" style="background-color:#ffcccc;"></span>Nivel 0 (Inicio)</span>
+        <span><span class="dot" style="background-color:#ccffcc;"></span>Nivel 1</span>
+        <span><span class="dot" style="background-color:#ccccff;"></span>Nivel 2</span>
+        <span><span class="dot" style="background-color:#ffffcc;"></span>Nivel 3</span>
+    </div>
+
+    <div class="mermaid">
+    graph TD
+        %% Definición de Nodos y Conexiones
+        1((1)) --- 2((2))
+        1 --- 3((3))
+        2 --- 4((4))
+        2 --- 5((5))
+        3 --- 6((6))
+        5 --- 7((7))
+
+        %% Estilos por Nivel (Sugerencia solicitada en el prompt)
+        classDef level0 fill:#ffcccc,stroke:#333,stroke-width:2px;
+        classDef level1 fill:#ccffcc,stroke:#333,stroke-width:2px;
+        classDef level2 fill:#ccccff,stroke:#333,stroke-width:2px;
+        classDef level3 fill:#ffffcc,stroke:#333,stroke-width:2px;
+
+        %% Asignación de clases a los nodos
+        class 1 level0;
+        class 2,3 level1;
+        class 4,5,6 level2;
+        class 7 level3;
+    </div>
+
+    <h2>2. Traza de Ejecución Paso a Paso</h2>
+    <table>
+        <thead>
+            <tr>
+                <th>Iteración</th>
+                <th>Nodo Actual (Pop)</th>
+                <th>Nivel</th>
+                <th>Vecinos Encontrados</th>
+                <th>Cola (Después de insertar)</th>
+                <th>Visitados Totales</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>Inicio</td>
+                <td>-</td>
+                <td>-</td>
+                <td>-</td>
+                <td>[1]</td>
+                <td>{1}</td>
+            </tr>
+            <tr>
+                <td>1</td>
+                <td>1</td>
+                <td>0</td>
+                <td>2, 3</td>
+                <td>[2, 3]</td>
+                <td>{1, 2, 3}</td>
+            </tr>
+            <tr>
+                <td>2</td>
+                <td>2</td>
+                <td>1</td>
+                <td>4, 5</td>
+                <td>[3, 4, 5]</td>
+                <td>{1, 2, 3, 4, 5}</td>
+            </tr>
+            <tr>
+                <td>3</td>
+                <td>3</td>
+                <td>1</td>
+                <td>6</td>
+                <td>[4, 5, 6]</td>
+                <td>{1...6}</td>
+            </tr>
+            <tr>
+                <td>4</td>
+                <td>4</td>
+                <td>2</td>
+                <td>-</td>
+                <td>[5, 6]</td>
+                <td>{1...6}</td>
+            </tr>
+            <tr>
+                <td>5</td>
+                <td>5</td>
+                <td>2</td>
+                <td>7</td>
+                <td>[6, 7]</td>
+                <td>{1...7}</td>
+            </tr>
+            <tr>
+                <td>6</td>
+                <td>6</td>
+                <td>2</td>
+                <td>-</td>
+                <td>[7]</td>
+                <td>{1...7}</td>
+            </tr>
+            <tr>
+                <td>7</td>
+                <td>7</td>
+                <td>3</td>
+                <td>-</td>
+                <td>[]</td>
+                <td>{1...7}</td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+
+<script>
+    // Inicialización de Mermaid
+    mermaid.initialize({ startOnLoad: true });
+</script>
+
+</body>
+</html>
