@@ -1,0 +1,1251 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🌳 Semana 7 – Árboles y Árboles Generadores Mínimos (MST)</title>
+    <style>
+        /* Reset y configuración base */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            padding: 20px;
+            background-color: #f9f9f9;
+            color: #333;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            padding: 40px;
+            border-radius: 10px;
+            box-shadow: 0 0 20px rgba(0,0,0,0.1);
+        }
+
+        /* Tipografía */
+        h1 {
+            text-align: center;
+            background: linear-gradient(135deg, #27ae60, #2ecc71);
+            color: white;
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+        }
+
+        h2 {
+            color: #2c3e50;
+            border-bottom: 2px solid #27ae60;
+            padding-bottom: 10px;
+            margin: 40px 0 20px 0;
+        }
+
+        h3 {
+            color: #2c3e50;
+            border-bottom: 1px solid #bdc3c7;
+            padding-bottom: 8px;
+            margin: 25px 0 15px 0;
+        }
+
+        h4 {
+            color: #16a085;
+            margin: 20px 0 10px 0;
+            font-weight: 600;
+        }
+
+        p {
+            margin-bottom: 15px;
+        }
+
+        /* Navegación */
+        nav ul {
+            list-style: none;
+            display: flex;
+            justify-content: space-around;
+            background: #ecf0f1;
+            padding: 15px;
+            border-radius: 5px;
+            flex-wrap: wrap;
+            margin: 20px 0;
+        }
+
+        nav li {
+            margin: 5px 10px;
+        }
+
+        nav a {
+            text-decoration: none;
+            color: #2c3e50;
+            font-weight: 500;
+            transition: color 0.3s;
+        }
+
+        nav a:hover {
+            color: #27ae60;
+        }
+
+        /* Cajas didácticas */
+        .engage {
+            background: #e3f2fd;
+            padding: 20px;
+            border-left: 5px solid #2196f3;
+            border-radius: 5px;
+            margin: 20px 0;
+        }
+
+        .objectives {
+            background: #e8f5e9;
+            padding: 20px;
+            border-left: 5px solid #2ecc71;
+            border-radius: 5px;
+            margin: 20px 0;
+        }
+
+        .concepts {
+            background: #fff3cd;
+            padding: 20px;
+            border-left: 5px solid #ffc107;
+            border-radius: 5px;
+            margin: 20px 0;
+        }
+
+        .visualization {
+            background: #f0f4c3;
+            padding: 20px;
+            border-left: 5px solid #cddc39;
+            border-radius: 5px;
+            margin: 20px 0;
+        }
+
+        .comparison {
+            background: #fef5e7;
+            padding: 20px;
+            border-left: 5px solid #f39c12;
+            border-radius: 5px;
+            margin: 20px 0;
+        }
+
+        .application {
+            background: #ebf5fb;
+            padding: 20px;
+            border-left: 5px solid #5dade2;
+            border-radius: 5px;
+            margin: 20px 0;
+        }
+
+        .warning {
+            background: #fbe9e7;
+            padding: 20px;
+            border-left: 5px solid #ff5722;
+            border-radius: 5px;
+            margin: 20px 0;
+        }
+
+        .gamification {
+            background: #f3e5f5;
+            padding: 20px;
+            border-left: 5px solid #9c27b0;
+            border-radius: 5px;
+            margin: 20px 0;
+            border: 2px dashed #9c27b0;
+        }
+
+        .checkpoint {
+            background: #fffbea;
+            padding: 25px;
+            border: 3px dashed #f39c12;
+            border-radius: 10px;
+            margin: 30px 0;
+        }
+
+        .project {
+            background: #d1ecf1;
+            padding: 20px;
+            border-left: 5px solid #17a2b8;
+            border-radius: 5px;
+            margin: 20px 0;
+        }
+
+        .ia-activity {
+            background: #e7d4f7;
+            padding: 20px;
+            border-left: 5px solid #9b59b6;
+            border-radius: 5px;
+            margin: 20px 0;
+        }
+
+        .checklist {
+            background: #d4edda;
+            padding: 20px;
+            border-left: 5px solid #28a745;
+            border-radius: 5px;
+            margin: 20px 0;
+        }
+
+        .math-def {
+            background: #fafafa;
+            border: 1px solid #ccc;
+            padding: 15px;
+            border-radius: 5px;
+            font-family: "Times New Roman", serif;
+            font-size: 1.05em;
+            text-align: center;
+            margin: 20px 0;
+        }
+
+        /* Tablas */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+        }
+
+        th, td {
+            border: 1px solid #ddd;
+            padding: 12px;
+            text-align: left;
+        }
+
+        th {
+            background-color: #27ae60;
+            color: white;
+            font-weight: 600;
+        }
+
+        tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+
+        /* Código */
+        .code-container {
+            position: relative;
+        }
+
+        .copy-button {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: #2ecc71;
+            color: white;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 0.9em;
+            transition: background 0.3s;
+            z-index: 10;
+        }
+
+        .copy-button:hover {
+            background: #27ae60;
+        }
+
+        .copy-button.copied {
+            background: #3498db;
+        }
+
+        pre {
+            background: #2d2d2d;
+            color: #f8f8f2;
+            padding: 20px;
+            border-radius: 8px;
+            overflow-x: auto;
+            margin: 20px 0;
+            line-height: 1.5;
+        }
+
+        code {
+            font-family: 'Courier New', monospace;
+            font-size: 0.95em;
+        }
+
+        /* IA prompts */
+        .prompt-number {
+            background: #9b59b6;
+            color: white;
+            padding: 6px 12px;
+            border-radius: 50%;
+            font-weight: bold;
+            margin-right: 10px;
+            display: inline-block;
+        }
+
+        .ia-prompt {
+            background: #f8f9fa;
+            padding: 15px;
+            border: 2px dashed #9b59b6;
+            border-radius: 5px;
+            margin: 10px 0;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9em;
+            white-space: pre-wrap;
+        }
+
+        /* Botón enlace */
+        .btn-link {
+            display: inline-block;
+            padding: 10px 20px;
+            background: #2ecc71;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+            margin-top: 10px;
+            font-weight: bold;
+        }
+
+        .btn-link:hover {
+            background: #27ae60;
+        }
+
+        /* Footer */
+        footer {
+            margin-top: 50px;
+            text-align: center;
+            font-size: 0.9em;
+            color: #777;
+            border-top: 1px solid #ddd;
+            padding-top: 20px;
+        }
+
+        /* Responsividad */
+        @media (max-width: 768px) {
+            .container {
+                padding: 20px;
+            }
+
+            nav ul {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            table {
+                font-size: 0.9em;
+            }
+
+            h1 {
+                font-size: 1.5em;
+            }
+        }
+    </style>
+    <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+    <script>mermaid.initialize({ startOnLoad: true, theme: 'default' });</script>
+</head>
+<body>
+<div class="container">
+    <h1>🌳 Semana 7 – Árboles y Árboles Generadores Mínimos (MST)</h1>
+    <p><em>Estructuras de Datos Avanzadas © 2025 | Unidad III. Árboles y Estructuras Jerárquicas</em></p>
+
+    <nav>
+        <ul>
+            <li><a href="#intro">Introducción</a></li>
+            <li><a href="#fundamentos">3.1 Fundamentos</a></li>
+            <li><a href="#propiedades">3.1.1 Propiedades</a></li>
+            <li><a href="#grafos">3.1.2 Árboles como grafos</a></li>
+            <li><a href="#mst">3.2 Árboles generadores</a></li>
+            <li><a href="#prim">3.2.1 Prim</a></li>
+            <li><a href="#kruskal">3.2.2 Kruskal</a></li>
+            <li><a href="#union-find">Union-Find</a></li>
+            <li><a href="#aplicaciones">3.2.3 Aplicaciones</a></li>
+            <li><a href="#errores">Errores comunes</a></li>
+            <li><a href="#codigo">Código Python</a></li>
+            <li><a href="#ia-activities">Actividades con IA</a></li>
+            <li><a href="#proyecto">Proyecto</a></li>
+            <li><a href="#reto">Reto gamificado</a></li>
+        </ul>
+    </nav>
+
+    <!-- INTRO / ENGANCHE -->
+    <section id="intro">
+        <div class="engage">
+            <h3>⚡ Actividad Rápida (3 min)</h3>
+            <p><strong>Tienes 6 casas dispersas en el campo.</strong> ¿Cuál es el número mínimo de cables que necesitas para conectarlas todas sin que ninguna quede aislada?</p>
+            <details>
+                <summary>👉 Ver respuesta</summary>
+                <p><strong>Respuesta: 5 cables.</strong> Si usas 4, alguien se queda sin luz. Si usas 6, inevitablemente creaste un circuito redundante. Esta es la regla de oro de los árboles: <strong>N − 1</strong>.</p>
+            </details>
+        </div>
+
+        <h2>🎯 Objetivos de la Semana</h2>
+        <div class="objectives">
+            <ul>
+                <li>Comprender los <strong>fundamentos teóricos de los árboles</strong> como estructuras jerárquicas.</li>
+                <li>Identificar las <strong>propiedades matemáticas clave</strong> y su impacto en el rendimiento algorítmico.</li>
+                <li>Reconocer a los árboles como <strong>casos especiales de grafos</strong>.</li>
+                <li>Definir y construir <strong>árboles generadores</strong> y <strong>árboles generadores mínimos (MST)</strong>.</li>
+                <li>Implementar y comparar <strong>Prim</strong> y <strong>Kruskal</strong> con estructuras eficientes (colas de prioridad y Union-Find).</li>
+                <li>Aplicar MST al <strong>diseño de redes de telecomunicaciones</strong> y problemas relacionados (clustering, TSP aproximado).</li>
+                <li>Usar <strong>IA generativa</strong> para documentar, depurar y reflexionar sobre tus soluciones.</li>
+            </ul>
+        </div>
+    </section>
+
+    <!-- 3.1 FUNDAMENTOS -->
+    <section id="fundamentos">
+        <h2>🌲 3.1 Fundamentos Teóricos de Árboles</h2>
+        <p>Un árbol no es solo una estructura con punteros padre-hijo; es una propiedad topológica de un grafo.</p>
+
+        <div class="math-def">
+            <strong>Definición formal</strong><br>
+            Un grafo G es un árbol ⟺ G es conexo y acíclico ⟺ |E| = |V| − 1
+        </div>
+
+        <div class="concepts">
+            <h3>¿Qué es un árbol?</h3>
+            <ul>
+                <li>Grafo no dirigido, conexo y sin ciclos.</li>
+                <li>Cada nodo (excepto la raíz) tiene exactamente un padre.</li>
+                <li>Entre cualquier par de nodos hay <strong>un único camino simple</strong>.</li>
+                <li>Modelo natural de <strong>jerarquías</strong> (sistemas de archivos, procesos, organizaciones, etc.).</li>
+            </ul>
+        </div>
+
+        <div class="visualization">
+            <h3>🎨 Visualización básica</h3>
+            <div class="mermaid" data-alt="Árbol simple con raíz A">
+            graph TD
+                A((A)) --> B((B))
+                A --> C((C))
+                B --> D((D))
+                B --> E((E))
+                C --> F((F))
+                C --> G((G))
+
+                style A fill:#2ecc71,stroke:#27ae60,stroke-width:3px,color:#fff
+            </div>
+        </div>
+
+        <div class="checkpoint">
+            <h3>⏸️ Checkpoint conceptual</h3>
+            <ol>
+                <li>Da un ejemplo del mundo real que pueda modelarse como un árbol.</li>
+                <li>Explica con tus palabras por qué en un árbol no puede haber ciclos.</li>
+                <li>¿Qué ventajas tiene un árbol respecto a un grafo denso para recorridos?</li>
+            </ol>
+        </div>
+    </section>
+
+    <!-- 3.1.1 PROPIEDADES -->
+    <section id="propiedades">
+        <h2>📐 3.1.1 Propiedades matemáticas y rendimiento</h2>
+
+        <div class="concepts">
+            <h3>Propiedades clave</h3>
+            <ul>
+                <li>Un árbol con <strong>n nodos</strong> tiene exactamente <strong>n − 1 aristas</strong>.</li>
+                <li>Entre cualquier par de nodos existe un <strong>camino simple único</strong>.</li>
+                <li>Agregar una arista a un árbol <strong>siempre</strong> crea exactamente un ciclo.</li>
+                <li>Quitar una arista de un árbol lo vuelve disconexo.</li>
+            </ul>
+        </div>
+
+        <div class="concepts">
+            <h3>Impacto en complejidad</h3>
+            <ul>
+                <li>Recorridos (BFS/DFS) en un árbol: O(n).</li>
+                <li>Búsqueda en árboles balanceados (BST/AVL): O(log n).</li>
+                <li>Menos aristas ⇒ menos trabajo al construir MST.</li>
+            </ul>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Estructura</th>
+                        <th>Aristas esperadas</th>
+                        <th>Complejidad de recorrido</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Árbol (n nodos)</td>
+                        <td>n − 1</td>
+                        <td>O(n)</td>
+                    </tr>
+                    <tr>
+                        <td>Grafo disperso</td>
+                        <td>O(n)</td>
+                        <td>O(n + m)</td>
+                    </tr>
+                    <tr>
+                        <td>Grafo denso</td>
+                        <td>≈ n²</td>
+                        <td>O(n²)</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </section>
+
+    <!-- 3.1.2 ÁRBOLES COMO GRAFOS -->
+    <section id="grafos">
+        <h2>🔗 3.1.2 Árboles como casos especiales de grafos</h2>
+
+        <div class="comparison">
+            <h3>Grafo general vs Árbol</h3>
+            <table>
+                <tr>
+                    <th>Criterio</th>
+                    <th>Grafo General</th>
+                    <th>Árbol</th>
+                </tr>
+                <tr>
+                    <td>Ciclos</td>
+                    <td>Pueden existir</td>
+                    <td>Ninguno</td>
+                </tr>
+                <tr>
+                    <td>Conectividad</td>
+                    <td>No siempre conexo</td>
+                    <td>Siempre conexo</td>
+                </tr>
+                <tr>
+                    <td># de aristas</td>
+                    <td>0 a n(n−1)/2</td>
+                    <td>n − 1</td>
+                </tr>
+                <tr>
+                    <td>Camino único</td>
+                    <td>No garantizado</td>
+                    <td>Sí, siempre</td>
+                </tr>
+                <tr>
+                    <td>Modelo típico</td>
+                    <td>Redes complejas, sociales</td>
+                    <td>Jerarquías, redes mínimas</td>
+                </tr>
+            </table>
+        </div>
+
+        <div class="visualization">
+            <h3>De grafo con ciclos a árbol generador</h3>
+            <div class="mermaid" data-alt="Grafo con ciclos vs árbol">
+            graph LR
+                subgraph G["Grafo con ciclos"]
+                    A((A)) ---|4| B((B))
+                    B ---|2| C((C))
+                    C ---|3| A
+                    B ---|5| D((D))
+                end
+                subgraph T["Árbol generador"]
+                    X((A)) ---|4| Y((B))
+                    Y ---|2| Z((C))
+                    Y ---|5| W((D))
+                end
+                style A fill:#ffcccc
+                style B fill:#ffcccc
+                style C fill:#ffcccc
+                style X fill:#ccffcc
+                style Y fill:#ccffcc
+                style Z fill:#ccffcc
+                style W fill:#ccffcc
+            </div>
+        </div>
+    </section>
+
+    <!-- 3.2 ÁRBOLES GENERADORES -->
+    <section id="mst">
+        <h2>🕸️ 3.2 Árboles generadores y optimización de conectividad</h2>
+
+        <div class="concepts">
+            <h3>Definiciones</h3>
+            <ul>
+                <li><strong>Árbol generador (spanning tree):</strong> subgrafo que:
+                    <ul>
+                        <li>Incluye todos los nodos del grafo original.</li>
+                        <li>Es un árbol (conexo y sin ciclos).</li>
+                    </ul>
+                </li>
+                <li><strong>Árbol generador mínimo (MST):</strong> árbol generador con <strong>peso total mínimo</strong>.</li>
+            </ul>
+        </div>
+
+        <div class="visualization">
+            <h3>Simulador interactivo recomendado</h3>
+            <p>Explora visualmente Prim y Kruskal:</p>
+            <a href="https://www.cs.usfca.edu/~galles/visualization/Prim.html" target="_blank" class="btn-link">
+                👉 Simulador Interactivo (USFCA)
+            </a>
+        </div>
+    </section>
+
+    <!-- 3.2.1 PRIM -->
+    <section id="prim">
+        <h2>⚡ 3.2.1 Algoritmo de Prim: construcción incremental</h2>
+
+        <div class="concepts">
+            <h3>Idea general</h3>
+            <p>Partimos de un nodo y vamos creciendo un árbol, eligiendo siempre la <strong>arista más barata</strong> que conecta el árbol actual con un nodo externo.</p>
+            <h4>Análisis de complejidad</h4>
+            <ul>
+                <li><strong>Temporal:</strong>
+                    <ul>
+                        <li>Con matriz de adyacencia: O(V²)</li>
+                        <li>Con lista de adyacencia + binary heap: O(E log V)</li>
+                        <li>Con Fibonacci heap: O(E + V log V) (teórico/avanzado)</li>
+                    </ul>
+                </li>
+                <li><strong>Espacial:</strong>
+                    <ul>
+                        <li>O(V) para el arreglo de visitados</li>
+                        <li>O(E) para el heap en el peor caso</li>
+                        <li>Total: O(V + E)</li>
+                    </ul>
+                </li>
+            </ul>
+        </div>
+
+        <div class="visualization">
+            <h3>🎬 Ejecución paso a paso</h3>
+            <details>
+                <summary>Ver traza detallada (click para expandir)</summary>
+                <table>
+                    <tr>
+                        <th>Paso</th>
+                        <th>Arista seleccionada</th>
+                        <th>Nodos en MST</th>
+                        <th>Cola de prioridad (peso, origen, destino)</th>
+                        <th>Peso acumulado</th>
+                    </tr>
+                    <tr>
+                        <td>0 (Inicio)</td>
+                        <td>—</td>
+                        <td>{A}</td>
+                        <td>[(3, A, C), (4, A, B)]</td>
+                        <td>0</td>
+                    </tr>
+                    <tr>
+                        <td>1</td>
+                        <td>A–C (3)</td>
+                        <td>{A, C}</td>
+                        <td>[(2, C, B), (4, A, B), (6, C, E)]</td>
+                        <td>3</td>
+                    </tr>
+                    <tr>
+                        <td>2</td>
+                        <td>C–B (2)</td>
+                        <td>{A, C, B}</td>
+                        <td>[(4, A, B), (5, B, D), (6, C, E)]</td>
+                        <td>5</td>
+                    </tr>
+                    <tr>
+                        <td>3</td>
+                        <td>B–D (5)</td>
+                        <td>{A, C, B, D}</td>
+                        <td>[(6, C, E), (7, D, E)]</td>
+                        <td>10</td>
+                    </tr>
+                    <tr>
+                        <td>4</td>
+                        <td>C–E (6)</td>
+                        <td>{A, C, B, D, E}</td>
+                        <td>[]</td>
+                        <td>16</td>
+                    </tr>
+                </table>
+                <p><strong>Observación clave:</strong> En cada paso, Prim elige la arista MÁS BARATA que conecta el MST parcial con un nodo no visitado. La cola de prioridad mantiene todas las candidatas ordenadas.</p>
+            </details>
+        </div>
+    </section>
+
+    <!-- 3.2.2 KRUSKAL -->
+    <section id="kruskal">
+        <h2>🧩 3.2.2 Algoritmo de Kruskal: enfoque basado en ordenamiento de aristas</h2>
+
+        <div class="concepts">
+            <h3>Idea general</h3>
+            <p>Ordena todas las aristas por peso y, de menor a mayor, va añadiendo aquellas que <strong>no forman ciclo</strong>, usando Union-Find para verificarlo.</p>
+            
+            <h4>Análisis de complejidad</h4>
+            <ul>
+                <li><strong>Temporal:</strong>
+                    <ul>
+                        <li>Ordenar aristas: O(E log E)</li>
+                        <li>Union-Find optimizado: O(E · α(V)) ≈ O(E)</li>
+                        <li>Total: O(E log E) ≈ O(E log V) (porque E ≤ V²)</li>
+                    </ul>
+                </li>
+                <li><strong>Espacial:</strong>
+                    <ul>
+                        <li>O(E) para almacenar todas las aristas</li>
+                        <li>O(V) para Union-Find (parent y rank)</li>
+                        <li>Total: O(E + V)</li>
+                    </ul>
+                </li>
+            </ul>
+        </div>
+
+        <div class="comparison">
+            <h3>Comparación Prim vs Kruskal</h3>
+            <table>
+                <tr>
+                    <th>Criterio</th>
+                    <th>Prim</th>
+                    <th>Kruskal</th>
+                </tr>
+                <tr>
+                    <td>Estrategia</td>
+                    <td>Expande un árbol desde un nodo inicial</td>
+                    <td>Une componentes independientes</td>
+                </tr>
+                <tr>
+                    <td>Estructura clave</td>
+                    <td>Cola de prioridad</td>
+                    <td>Union-Find (Disjoint Set)</td>
+                </tr>
+                <tr>
+                    <td>Complejidad temporal</td>
+                    <td>O(E log V)</td>
+                    <td>O(E log E)</td>
+                </tr>
+                <tr>
+                    <td>Complejidad espacial</td>
+                    <td>O(V + E)</td>
+                    <td>O(E + V)</td>
+                </tr>
+                <tr>
+                    <td>Grafo ideal</td>
+                    <td>Grafos densos (E ≈ V²)</td>
+                    <td>Grafos dispersos (E ≈ V)</td>
+                </tr>
+                <tr>
+                    <td><strong>¿Cuándo usarlo?</strong></td>
+                    <td colspan="2" style="background: #fff3cd;"><em>Ver tabla detallada abajo</em></td>
+                </tr>
+            </table>
+        </div>
+
+        <div class="comparison">
+            <h3>Guía de selección de algoritmo según contexto</h3>
+            <table>
+                <tr>
+                    <th>Situación</th>
+                    <th>Algoritmo recomendado</th>
+                    <th>Razón</th>
+                </tr>
+                <tr>
+                    <td>Grafo denso (muchas aristas, E ≈ V²)</td>
+                    <td><strong>Prim</strong></td>
+                    <td>O(E log V) es mejor que O(E log E) cuando E es grande. El heap maneja bien la densidad.</td>
+                </tr>
+                <tr>
+                    <td>Grafo disperso (pocas aristas, E ≈ V)</td>
+                    <td><strong>Kruskal</strong></td>
+                    <td>Ordenar pocas aristas es rápido. Union-Find es eficiente para grafos con pocos componentes.</td>
+                </tr>
+                <tr>
+                    <td>Grafo representado con lista de adyacencia</td>
+                    <td><strong>Prim</strong></td>
+                    <td>Evita tener que extraer y ordenar todas las aristas. Trabaja directamente con la estructura.</td>
+                </tr>
+                <tr>
+                    <td>Grafo con lista de aristas ya disponible</td>
+                    <td><strong>Kruskal</strong></td>
+                    <td>La entrada ya está en el formato que Kruskal necesita.</td>
+                </tr>
+                <tr>
+                    <td>Necesitas MST por partes (streaming/incremental)</td>
+                    <td><strong>Kruskal</strong></td>
+                    <td>Puedes agregar aristas incrementalmente y reordenar solo las nuevas.</td>
+                </tr>
+                <tr>
+                    <td>Requieres el árbol desde un nodo raíz específico</td>
+                    <td><strong>Prim</strong></td>
+                    <td>Naturalmente construye el MST desde un nodo inicial, preservando jerarquía.</td>
+                </tr>
+                <tr>
+                    <td>Memoria limitada (grafo muy grande)</td>
+                    <td><strong>Prim</strong></td>
+                    <td>No necesita almacenar todas las aristas en memoria simultáneamente.</td>
+                </tr>
+                <tr>
+                    <td>Grafo con múltiples componentes conexos</td>
+                    <td><strong>Kruskal</strong></td>
+                    <td>Naturalmente produce un bosque generador mínimo sin modificaciones.</td>
+                </tr>
+            </table>
+        </div>
+    </section>
+
+    <!-- UNION-FIND -->
+    <section id="union-find">
+        <h2>🔗 Estructura Union-Find (Disjoint Set Union)</h2>
+
+        <div class="concepts">
+            <h3>¿Para qué sirve?</h3>
+            <p>Union-Find (también llamado Disjoint Set Union o DSU) es una estructura de datos que mantiene una colección de conjuntos disjuntos y permite responder eficientemente:</p>
+            <p><strong>"¿Los elementos X e Y están en el mismo conjunto?"</strong></p>
+            <p>En el contexto de Kruskal, esto se traduce a: <em>"¿Agregar esta arista crearía un ciclo en mi MST?"</em></p>
+        </div>
+
+        <div class="concepts">
+            <h3>Operaciones fundamentales</h3>
+            <ul>
+                <li><strong>find(x):</strong> Devuelve el representante (raíz) del conjunto que contiene a x</li>
+                <li><strong>union(x, y):</strong> Une los conjuntos que contienen a x e y</li>
+                <li><strong>same_set(x, y):</strong> Verifica si x e y están en el mismo conjunto (equivale a: find(x) == find(y))</li>
+            </ul>
+        </div>
+
+        <div class="visualization">
+            <h3>Ejemplo visual: detectando ciclos</h3>
+            <div class="mermaid" data-alt="Union-Find detectando ciclo">
+            graph TD
+                subgraph "Paso 1: Añadir arista A-B"
+                    A1[A: {A}] --> B1[B: {B}]
+                    style A1 fill:#e8f5e9
+                    style B1 fill:#e8f5e9
+                end
+                subgraph "Paso 2: Añadir arista B-C"
+                    A2[A: {A,B}] --> B2[B: {A,B}]
+                    B2 --> C2[C: {C}]
+                    style A2 fill:#e8f5e9
+                    style C2 fill:#e8f5e9
+                end
+                subgraph "Paso 3: ¿Añadir arista A-C?"
+                    A3[A: {A,B,C}] --> B3[B: {A,B,C}]
+                    B3 --> C3[C: {A,B,C}]
+                    A3 -.CICLO.-> C3
+                    style A3 fill:#ffebee
+                    style C3 fill:#ffebee
+                end
+            </div>
+            <p><strong>Observación:</strong> En el paso 3, find(A) y find(C) devuelven el mismo representante, indicando que ya están conectados. Agregar A-C crearía un ciclo, por lo que Kruskal la rechaza.</p>
+        </div>
+
+        <div class="concepts">
+            <h3>Optimizaciones críticas</h3>
+            
+            <h4>1. Path Compression (Compresión de caminos)</h4>
+            <p><strong>Problema sin optimización:</strong> Si hacemos muchas operaciones union en cadena (A→B→C→D→E), el árbol se vuelve una lista enlazada y find(E) toma O(n).</p>
+            <p><strong>Solución:</strong> Durante find(x), "aplana" el árbol conectando cada nodo directamente a la raíz.</p>
+            <pre><code>def find(self, i):
+    if self.parent[i] != i:
+        # Path compression: conecta i directamente a la raíz
+        self.parent[i] = self.find(self.parent[i])
+    return self.parent[i]</code></pre>
+            <p><strong>Impacto:</strong> Reduce find de O(n) a O(α(n)) amortizado, donde α es la función inversa de Ackermann (≈ constante para n < 10^600).</p>
+
+            <h4>2. Union by Rank (Unión por rango)</h4>
+            <p><strong>Problema sin optimización:</strong> Si siempre conectamos el primer conjunto bajo el segundo, podemos crear árboles profundos.</p>
+            <p><strong>Solución:</strong> Mantén un "rango" (altura aproximada) de cada árbol. Al unir, conecta el árbol de menor rango bajo el de mayor rango.</p>
+            <pre><code>def union(self, i, j):
+    root_i = self.find(i)
+    root_j = self.find(j)
+    
+    if root_i != root_j:
+        # Union by rank: conecta el árbol más pequeño bajo el más grande
+        if self.rank[root_i] < self.rank[root_j]:
+            self.parent[root_i] = root_j
+        elif self.rank[root_i] > self.rank[root_j]:
+            self.parent[root_j] = root_i
+        else:
+            self.parent[root_j] = root_i
+            self.rank[root_i] += 1
+        return True  # Unión exitosa
+    return False  # Ya estaban en el mismo conjunto</code></pre>
+            <p><strong>Impacto:</strong> Garantiza que la profundidad del árbol nunca exceda O(log n), incluso sin path compression.</p>
+
+            <h4>Combinación de ambas optimizaciones</h4>
+            <p>Cuando se usan juntas, path compression + union by rank dan una complejidad amortizada de <strong>O(α(n))</strong> por operación, lo que es efectivamente constante en la práctica.</p>
+        </div>
+
+        <div class="warning">
+            <h3>⚠️ Error común: olvidar verificar el resultado de union</h3>
+            <p>En Kruskal, debes verificar que <code>union(u, v)</code> devuelva <code>True</code> antes de agregar la arista al MST. Si devuelve <code>False</code>, significa que u y v ya estaban conectados y agregar esa arista crearía un ciclo.</p>
+        </div>
+    </section>
+
+    <!-- 3.2.3 APLICACIONES -->
+    <section id="aplicaciones">
+        <h2>📡 3.2.3 Aplicaciones en redes de telecomunicaciones</h2>
+
+        <div class="application">
+            <h3>Red de fibra óptica entre ciudades</h3>
+            <p>Los nodos son ciudades, las aristas son enlaces posibles. Un MST minimiza el costo total del tendido de fibra manteniendo conectividad completa.</p>
+        </div>
+
+        <div class="application">
+            <h3>Red de enlaces microondas / torres de telefonía</h3>
+            <p>El MST da el esqueleto de conectividad mínima. Sobre él se agregan enlaces extras para redundancia y tolerancia a fallos.</p>
+        </div>
+
+        <div class="application">
+            <h3>Clustering y TSP aproximado</h3>
+            <ul>
+                <li><strong>Clustering:</strong> eliminar las aristas más caras de un MST puede separar naturalmente grupos de datos.</li>
+                <li><strong>TSP (Traveling Salesman Problem):</strong> el costo del MST es una <em>cota inferior</em> para el costo mínimo del ciclo hamiltoniano. Algoritmos como Christofides usan MST como parte de su construcción (garantía ≤ 1.5 · óptimo).</li>
+            </ul>
+        </div>
+    </section>
+
+    <!-- ERRORES COMUNES -->
+    <section id="errores">
+        <h2>⚠️ Errores frecuentes en MST</h2>
+        <p>Analiza esta tabla; condensa errores típicos de examen:</p>
+        <table>
+            <tr>
+                <th>Error típico</th>
+                <th>¿Por qué ocurre?</th>
+                <th>Corrección / prueba mental</th>
+            </tr>
+            <tr>
+                <td><strong>Confundir Prim con Dijkstra</strong></td>
+                <td>El código es muy similar (ambos usan Priority Queue).</td>
+                <td>Pregunta guía: si hay pesos negativos, Prim sigue siendo válido; Dijkstra no. Además, Prim construye un árbol, Dijkstra calcula distancias desde un origen.</td>
+            </tr>
+            <tr>
+                <td><strong>Crear ciclos en Kruskal</strong></td>
+                <td>Olvidar verificar Union-Find antes de agregar la arista.</td>
+                <td>Dibuja un triángulo A–B–C. Si ya tienes A–B y B–C, agregar A–C crea un ciclo. Union-Find detecta esto cuando find(A) == find(C).</td>
+            </tr>
+            <tr>
+                <td><strong>Creer que el MST da siempre el camino más corto</strong></td>
+                <td>Confusión de "mínimo global" con "camino mínimo entre pares".</td>
+                <td>Contraejemplo rápido: triángulo A-B-C con A-B=10, B-C=10, A-C=15. MST usa A-B y B-C (costo 20), pero el camino más corto A→C es 15 directo.</td>
+            </tr>
+            <tr>
+                <td><strong>No verificar si el grafo es conexo</strong></td>
+                <td>Asumir que todo grafo tiene un MST único.</td>
+                <td>Si el grafo tiene componentes desconectados, obtendrás un <em>bosque generador mínimo</em>. Verifica: <code>len(mst_edges) == V - 1</code>. Si es menor, el grafo no era conexo.</td>
+            </tr>
+            <tr>
+                <td><strong>Reiniciar mal Union-Find en múltiples pruebas</strong></td>
+                <td>Reutilizar el mismo objeto DSU sin reinicializarlo.</td>
+                <td>Siempre crea un nuevo <code>dsu = DSU(V)</code> antes de cada ejecución de Kruskal. Union-Find mantiene estado entre llamadas.</td>
+            </tr>
+            <tr>
+                <td><strong>Permitir aristas duplicadas</strong></td>
+                <td>Si <code>add_edge(0,1,5)</code> se llama dos veces, Kruskal puede seleccionar la arista duplicada.</td>
+                <td>Usa un conjunto (set) para detectar aristas duplicadas antes de agregar, o verifica en la lógica de Kruskal que no se agregue la misma arista dos veces.</td>
+            </tr>
+            <tr>
+                <td><strong>Olvidar el caso base en path compression</strong></td>
+                <td>Recursión infinita si no verificas <code>self.parent[i] != i</code>.</td>
+                <td>La condición <code>if self.parent[i] != i:</code> es CRÍTICA. Sin ella, find(i) se llama a sí mismo infinitamente cuando i es la raíz.</td>
+            </tr>
+        </table>
+    </section>
+
+    <!-- CÓDIGO PYTHON -->
+    <section id="codigo">
+        <h2>🐍 Implementación profesional en Python (Prim + Kruskal)</h2>
+        <p>El siguiente código incluye Prim con heap y Kruskal con Union-Find optimizado (path compression + unión por rango):</p>
+
+        <div class="code-container">
+            <button class="copy-button" onclick="copyCode(this)">📋 Copiar código</button>
+            <pre><code class="language-python">import heapq
+
+class GraphMST:
+    def __init__(self, vertices):
+        self.V = vertices
+        self.edges = []  # Para Kruskal: (u, v, w)
+        self.adj = {i: [] for i in range(vertices)}  # Para Prim
+
+    def add_edge(self, u, v, w):
+        self.edges.append((u, v, w))
+        self.adj[u].append((v, w))
+        self.adj[v].append((u, w))
+
+    # --- ALGORITMO DE PRIM ---
+    def prim_mst(self, start_node=0):
+        visited = [False] * self.V
+        pq = []
+
+        visited[start_node] = True
+        for neighbor, weight in self.adj[start_node]:
+            heapq.heappush(pq, (weight, start_node, neighbor))
+
+        mst_edges = []
+        mst_cost = 0
+
+        while pq:
+            weight, u, v = heapq.heappop(pq)
+            if visited[v]:
+                continue
+
+            visited[v] = True
+            mst_edges.append((u, v, weight))
+            mst_cost += weight
+
+            for next_node, next_weight in self.adj[v]:
+                if not visited[next_node]:
+                    heapq.heappush(pq, (next_weight, v, next_node))
+
+        return mst_edges, mst_cost
+
+    # --- UNION-FIND OPTIMIZADO ---
+    class DSU:
+        def __init__(self, n):
+            self.parent = list(range(n))
+            self.rank = [0] * n
+
+        def find(self, i):
+            if self.parent[i] != i:
+                self.parent[i] = self.find(self.parent[i])
+            return self.parent[i]
+
+        def union(self, i, j):
+            root_i = self.find(i)
+            root_j = self.find(j)
+
+            if root_i != root_j:
+                if self.rank[root_i] < self.rank[root_j]:
+                    self.parent[root_i] = root_j
+                elif self.rank[root_i] > self.rank[root_j]:
+                    self.parent[root_j] = root_i
+                else:
+                    self.parent[root_j] = root_i
+                    self.rank[root_i] += 1
+                return True
+            return False
+
+    # --- ALGORITMO DE KRUSKAL ---
+    def kruskal_mst(self):
+        mst_cost = 0
+        mst_edges = []
+        dsu = self.DSU(self.V)
+
+        sorted_edges = sorted(self.edges, key=lambda item: item[2])
+
+        for u, v, w in sorted_edges:
+            if dsu.union(u, v):
+                mst_edges.append((u, v, w))
+                mst_cost += w
+
+        return mst_edges, mst_cost
+
+# Prueba rápida
+if __name__ == "__main__":
+    g = GraphMST(4)
+    g.add_edge(0, 1, 10)
+    g.add_edge(0, 2, 6)
+    g.add_edge(0, 3, 5)
+    g.add_edge(1, 3, 15)
+    g.add_edge(2, 3, 4)
+
+    edges_p, cost_p = g.prim_mst()
+    print("MST Prim:", edges_p, "Costo:", cost_p)
+
+    edges_k, cost_k = g.kruskal_mst()
+    print("MST Kruskal:", edges_k, "Costo:", cost_k)</code></pre>
+        </div>
+    </section>
+
+    <!-- ACTIVIDADES IA -->
+    <section id="ia-activities">
+        <h2>🤖 Actividades con IA (Semana 7)</h2>
+
+        <div class="ia-activity">
+            <h3><span class="prompt-number">1</span> Selección de algoritmo según el contexto</h3>
+            <div class="ia-prompt">Contexto: Estoy estudiando árboles generadores mínimos (MST) y conozco los algoritmos de Prim y Kruskal.
+
+Tarea:
+1. Genera 5 escenarios del mundo real donde se requiera construir un MST (p.ej. red de fibra óptica, red eléctrica, red de campus).
+2. Para cada escenario indica:
+   - Si es mejor usar Prim o Kruskal y por qué.
+   - Qué estructura de datos recomendarías para su implementación.
+   - Cómo escalaría la solución si el número de nodos creciera 10 veces.
+
+Formato: tabla comparativa con columnas: Escenario, Algoritmo recomendado, Justificación, Estructuras de datos, Comentario de escalabilidad.</div>
+        </div>
+
+        <div class="ia-activity">
+            <h3><span class="prompt-number">2</span> Depuración de implementación de Kruskal</h3>
+            <div class="ia-prompt">Tengo la siguiente implementación de Kruskal en Python que produce resultados incorrectos:
+
+[INSTRUCCIONES PARA EL ESTUDIANTE:]
+1. Pega COMPLETA tu clase GraphMST con el método kruskal_mst()
+2. Incluye la clase DSU (Union-Find) si está separada
+3. Proporciona el grafo de prueba que usaste: llamadas add_edge(...) línea por línea
+4. Describe qué resultado esperabas vs qué obtuviste
+
+Ejemplo de formato a seguir:
+"""
+Código:
+[pegar tu implementación completa aquí]
+
+Grafo de prueba:
+g = GraphMST(5)
+g.add_edge(0, 1, 10)
+g.add_edge(0, 2, 6)
+g.add_edge(1, 2, 5)
+g.add_edge(1, 3, 15)
+g.add_edge(2, 3, 4)
+
+Resultado esperado: MST con costo total = 15
+Resultado obtenido: MST con costo total = 20 (¡incorrecto!)
+"""
+
+Tarea para la IA:
+1. Identifica el error específico en Union-Find o en la lógica principal de Kruskal.
+2. Explica POR QUÉ ese error produce el comportamiento observado (no solo QUÉ está mal).
+3. Proporciona código corregido con comentarios explicativos en las líneas modificadas.
+4. Sugiere 3 casos de prueba adicionales que hubieran detectado el error original.
+
+Formato: respuesta en pasos numerados, con fragmentos de código corregido y breve explicación de cada cambio.</div>
+        </div>
+
+        <div class="ia-activity">
+            <h3><span class="prompt-number">3</span> Visualización de MST con Mermaid</h3>
+            <div class="ia-prompt">Quiero documentar mi solución de MST usando diagramas Mermaid.
+
+Contexto:
+- Tengo un grafo con 6 nodos (0 a 5) y los pesos de las aristas.
+- Ya calculé el MST con Prim y obtuve las aristas: (0,1,3), (1,2,4), (2,3,2), (3,4,6), (4,5,5).
+
+Tarea:
+1. Genera código Mermaid para:
+   - El grafo completo (todas las aristas con sus pesos).
+   - El MST, resaltando las aristas seleccionadas.
+2. Sugiere una convención de colores para diferenciar:
+   - Nodos del MST vs nodos aislados (si los hubiera).
+   - Aristas del MST vs aristas descartadas.
+3. Proporciona un breve texto en formato Markdown que explique la figura para un lector no experto.
+
+Formato: código Mermaid listo para pegar + texto explicativo.</div>
+        </div>
+
+        <div class="checklist">
+            <h3>✅ Rúbrica de uso ético de IA (auto-revisión)</h3>
+            <ul>
+                <li><input type="checkbox" aria-label="Atribución"> Documenté qué partes fueron apoyadas por IA en mi código o reporte.</li>
+                <li><input type="checkbox" aria-label="Comprensión"> Puedo explicar Prim y Kruskal sin leer el código.</li>
+                <li><input type="checkbox" aria-label="Validación"> Diseñé al menos 3 casos de prueba propios para validar mi MST.</li>
+                <li><input type="checkbox" aria-label="Reflexión"> Escribí un párrafo crítico sobre en qué me ayudó la IA y qué tuve que corregir.</li>
+            </ul>
+        </div>
+    </section>
+
+    <!-- PROYECTO -->
+    <section id="proyecto" class="project">
+        <h2>🚀 Proyecto integrador – Avance Semana 7</h2>
+
+        <div style="display: grid; grid-template-columns: repeat(auto-fit,minmax(260px,1fr)); gap: 20px;">
+            <div>
+                <h3>Diseño de red de sensores de tráfico</h3>
+                <ul>
+                    <li>Nodos: intersecciones principales de una ciudad o campus.</li>
+                    <li>Aristas: calles (peso = distancia, costo de excavación o tiempo estimado).</li>
+                    <li>Construye el MST con Prim y con Kruskal.</li>
+                </ul>
+            </div>
+            <div>
+                <h3>Entregables sugeridos</h3>
+                <ul>
+                    <li>Módulo <code>mst.py</code> o clase <code>NetworkDesigner</code> con ambas implementaciones.</li>
+                    <li>Reporte breve (3–4 páginas):
+                        <ul>
+                            <li>Descripción de la red modelada.</li>
+                            <li>Diagramas o capturas del MST.</li>
+                            <li>Comparación de costo vs una red totalmente conectada.</li>
+                        </ul>
+                    </li>
+                    <li>Sección de reflexión:
+                        <ul>
+                            <li>¿Qué simplifica el modelo de MST?</li>
+                            <li>¿Qué factores del mundo real quedaron fuera (capacidad, latencia, redundancia)?</li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="checklist">
+            <h3>✅ Rúbrica de evaluación del proyecto</h3>
+            <table>
+                <tr>
+                    <th>Criterio</th>
+                    <th>Puntos</th>
+                    <th>Descripción</th>
+                </tr>
+                <tr>
+                    <td><strong>Implementación correcta</strong></td>
+                    <td>30</td>
+                    <td>Prim y Kruskal devuelven el mismo costo en 5+ casos de prueba diversos. Código ejecutable sin errores.</td>
+                </tr>
+                <tr>
+                    <td><strong>Documentación y visualización</strong></td>
+                    <td>20</td>
+                    <td>Diagramas claros del grafo original y el MST. Código comentado apropiadamente.</td>
+                </tr>
+                <tr>
+                    <td><strong>Análisis comparativo</strong></td>
+                    <td>20</td>
+                    <td>Tabla comparando tiempo de ejecución para grafos de 10, 100, 1000 nodos. Análisis de cuándo usar cada algoritmo.</td>
+                </tr>
+                <tr>
+                    <td><strong>Reflexión crítica</strong></td>
+                    <td>15</td>
+                    <td>¿Qué simplificaciones hiciste? ¿Qué falta para un sistema real? ¿Qué aprendiste?</td>
+                </tr>
+                <tr>
+                    <td><strong>Uso ético de IA</strong></td>
+                    <td>15</td>
+                    <td>Evidencia clara de qué generó la IA vs tu propio razonamiento. Atribución adecuada.</td>
+                </tr>
+            </table>
+        </div>
+
+        <div class="checklist">
+            <h3>Checklist rápido antes de entregar</h3>
+            <ul>
+                <li><input type="checkbox"> Entiendo y puedo definir árbol, árbol generador y MST sin consultar apuntes.</li>
+                <li><input type="checkbox"> Implementé Prim y Kruskal y verifiqué que dan el mismo costo en múltiples grafos.</li>
+                <li><input type="checkbox"> Relacioné MST con al menos un caso real de redes o infraestructura con análisis de limitaciones.</li>
+                <li><input type="checkbox"> Si usé IA, dejé evidencia clara de cómo la integré de forma crítica y qué validé por mi cuenta.</li>
+                <li><input type="checkbox"> Mi código incluye casos de prueba y maneja grafos no conexos apropiadamente.</li>
+            </ul>
+        </div>
+    </section>
+
+    <!-- RETO GAMIFICADO -->
+    <section id="reto">
+        <div class="gamification">
+            <h2>🏆 Desafío del Alcalde Corrupto</h2>
+            <p><strong>Escenario:</strong> Diseñaste un MST perfecto para la red eléctrica de la ciudad: costo = $1,000,000. El alcalde insiste en agregar una arista extra carísima de $500,000 para pasar cerca de la fábrica de su primo.</p>
+            <p><strong>Pregunta:</strong> Si estás obligado a incluir esa arista y la red debe seguir siendo conexa, ¿qué pasa con el costo total y la estructura? ¿Sigue siendo un MST?</p>
+            <details>
+                <summary>💡 Ver solución</summary>
+                <p>Al agregar una arista a un árbol, <strong>creas un ciclo</strong>. Para volver a tener un árbol debes quitar alguna arista del ciclo. Si la arista del alcalde es la más cara del ciclo y aún así estás obligado a conservarla, terminarás quitando otra más barata y el costo total aumentará. Ya no es un MST, sino un árbol generador forzado y subóptimo.</p>
+                <p><strong>Concepto clave:</strong> Esto ilustra que un MST es óptimo SOLO cuando todas las decisiones se basan en minimizar costo. Restricciones políticas o técnicas (como cables que DEBEN incluirse por regulación) producen árboles generadores subóptimos.</p>
+            </details>
+        </div>
+    </section>
+
+    <footer>
+        <p>Semana 7 – Árboles y Árboles Generadores Mínimos | Estructuras de Datos Avanzadas</p>
+        <p>Dr. Eligardo Cruz Sánchez | Universidad Autónoma de Nayarit</p>
+        <p><em>Versión 2.0</em></p>
+    </footer>
+</div>
+
+<script>
+function copyCode(button) {
+    const codeBlock = button.nextElementSibling.querySelector('code');
+    const textToCopy = codeBlock.textContent;
+    
+    navigator.clipboard.writeText(textToCopy).then(() => {
+        const originalText = button.textContent;
+        button.textContent = '✅ ¡Copiado!';
+        button.classList.add('copied');
+        
+        setTimeout(() => {
+            button.textContent = originalText;
+            button.classList.remove('copied');
+        }, 2000);
+    }).catch(err => {
+        console.error('Error al copiar:', err);
+        button.textContent = '❌ Error';
+        setTimeout(() => {
+            button.textContent = '📋 Copiar código';
+        }, 2000);
+    });
+}
+</script>
+
+</body>
+</html>

@@ -1,0 +1,2 @@
+C:\Users\Fernando\Desktop\grafos\grafos\bin\Release\net9.0\win-x64\publish\grafos.pdb
+C:\Users\Fernando\Desktop\grafos\grafos\bin\Release\net9.0\win-x64\publish\grafos.exe
